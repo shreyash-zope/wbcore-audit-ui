@@ -34,7 +34,7 @@ function Header({onApplyFilter}) {
 
     try {
       const queryString = new URLSearchParams(newFilters).toString();
-      const response = await fetch(`http://localhost:3909/core/audit?${queryString}`);
+      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
