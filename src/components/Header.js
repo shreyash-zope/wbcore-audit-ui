@@ -1,5 +1,5 @@
 import {useState} from "react";
-import result from "../data/slotnxtsupport";
+// import result from "../data/slotnxtsupport";
 
 import ModuleSelect from "./ModuleSelect";
 import Filter from "./Filter";
@@ -29,14 +29,14 @@ function Header({onSearch}) {
 
   const fetchData = async (filters, selectedModule) => {
     try {
-      // const queryString = new URLSearchParams(filters).toString();
-      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      const queryString = new URLSearchParams(filters).toString();
+      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
 
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-      // const result = await response.json();
+      const result = await response.json();
       onSearch(result.data, selectedModule);
     } catch (error) {
       console.error("Error fetching data:", error.message);
