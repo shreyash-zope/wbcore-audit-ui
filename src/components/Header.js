@@ -1,114 +1,75 @@
-import {Box, Button, Modal} from "@mui/material";
 import {useState} from "react";
-import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
-// import data from "../data";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import result from "../data/slotnxtsupport";
 
-function Header({onApplyFilter}) {
-  const modules = ["slotnxtops", "slotnxtsupport", "spupdate", "batchflip"];
+import ModuleSelect from "./ModuleSelect";
+import Filter from "./Filter";
+import {DesktopDateTimeRangePicker, LocalizationProvider} from "@mui/x-date-pickers-pro";
+import {AdapterDayjs} from "@mui/x-date-pickers-pro/AdapterDayjs";
+import {Button} from "@mui/material";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
-  const [open, setOpen] = useState(true);
-  const [filterApplied, setFilterApplied] = useState(false);
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+function Header({onSearch}) {
   const [module, setModule] = useState("");
+  const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
+  const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
+  const [to, setTo] = useState(dayjs(date[1]).add(330, "m").toJSON());
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // console.log("from => ", from);
+  // console.log("to => ", to);
+  const handleDate = newDate => {
+    setDate(newDate);
+    setFrom(dayjs(newDate[0]).add(330, "m").toJSON());
+    setTo(dayjs(newDate[1]).add(330, "m").toJSON());
+  };
 
-  const applyFilter = async e => {
-    setFilterApplied(true);
-    handleClose();
-
-    const newFilters = {from, to, module};
-
+  const fetchData = async (filters, selectedModule) => {
     try {
-      const queryString = new URLSearchParams(newFilters).toString();
-      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      // const queryString = new URLSearchParams(filters).toString();
+      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! Status: ${response.status}`);
+      // }
 
-      const data = await response.json();
-
-      onApplyFilter(data.data);
+      // const result = await response.json();
+      onSearch(result.data, selectedModule);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
   };
+
+  const handleSearch = selectedModule => {
+    const filters = {selectedModule, from, to};
+    fetchData(filters, selectedModule);
+  };
+
   return (
-    <header className="header">
-      <div className="icon-container">
-        <Button onClick={handleOpen} variant="contained" startIcon={<FilterListRoundedIcon />}>
-          filter
+    <div>
+      <header className="header">
+        <ModuleSelect setModule={setModule} module={module} handleSearch={handleSearch} />
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <DesktopDateTimePicker localeText={{start: "From", end: "To"}} /> */}
+          <DesktopDateTimeRangePicker
+            localeText={{start: "From", end: "To"}}
+            defaultValue={[dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]}
+            onChange={handleDate}
+            value={date}
+          />
+        </LocalizationProvider>
+
+        <Button onClick={() => handleSearch(module)} variant="contained" startIcon={<SearchRoundedIcon />}>
+          search
         </Button>
-        <Modal
-          open={open}
-          onClose={filterApplied ? handleClose : () => {}}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <form
-              onSubmit={e => {
-                e.preventDefault(); // Prevent default form submission
-                applyFilter(e); // Call applyFilter if validation passes
-              }}
-            >
-              <div>
-                <label htmlFor="start-date">Start Date:</label>
-                <input
-                  type="date"
-                  id="start-date"
-                  name="start-date"
-                  value={from}
-                  onChange={e => setFrom(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="end-date">End Date:</label>
-                <input
-                  type="date"
-                  id="end-date"
-                  name="end-date"
-                  value={to}
-                  onChange={e => setTo(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="module-select">Select Module:</label>
-                <select id="module-select" value={module} onChange={e => setModule(e.target.value)} required>
-                  <option value="">--Please choose an option--</option>
-                  {modules.map(module => (
-                    <option key={module} value={module}>
-                      {module}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <button type="submit">Apply Filters</button>
-              </div>
-            </form>
-          </Box>
-        </Modal>
-      </div>
-      <div className="title-container"> {module} </div>
-      <div></div>
-    </header>
+
+        <Filter />
+      </header>
+    </div>
   );
 }
 

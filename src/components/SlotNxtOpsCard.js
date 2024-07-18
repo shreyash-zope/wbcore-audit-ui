@@ -8,7 +8,6 @@ import {useState} from "react";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreSharpIcon from "@mui/icons-material/ExpandMoreSharp";
 import ExpandLessSharpIcon from "@mui/icons-material/ExpandLessSharp";
-// import dayjs from "dayjs";
 
 const table_head = {
   fontWeight: "bold",
@@ -19,7 +18,7 @@ const table_body = {
   fontSize: "15px",
 };
 
-function SPToolCard({data}) {
+function SlotNxtOpsCard({data}) {
   const [checked, setChecked] = useState({});
 
   const handleChange = index => {
@@ -45,11 +44,11 @@ function SPToolCard({data}) {
             >
               <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div>Type</div>
-                <div>{el.type || "sp_change"}</div>
+                <div>{el.activityLog[0].type}</div>
               </div>
               <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>Article Number</div>
-                <div>{el.payload.articleNumber}</div>
+                <div>Service Name</div>
+                <div>{el.serviceName}</div>
               </div>
             </div>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -58,22 +57,26 @@ function SPToolCard({data}) {
                 justifyContent: "space-evenly",
                 display: "flex",
                 flexDirection: "column",
-                width: "18%",
+                width: "20%",
                 gap: "20px",
               }}
             >
               <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div>FC Code</div>
-                <div>{el.payload.fcCode}</div>
+                <div>{el.activityLog[0].payload.fcId}</div>
               </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>JIT</div>
-                <div>{el.payload.JIT}</div>
+              <div
+                style={{display: el.activityLog[0].payload.shipMode ? "flex" : "none", justifyContent: "space-between"}}
+              >
+                <div>Ship Mode</div>
+                <div>{el.activityLog[0].payload.shipMode}</div>
               </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>FFMplantCode</div>
-                <div>{el.payload.FFMplantCode || el.payload.fcCode}</div>
-              </div>
+              {Object.keys(el.activityLog[0].payload.slots[0]).map(ele => (
+                <div style={{display: ele === "uid" ? "none" : "flex", justifyContent: "space-between"}}>
+                  <div> {ele} </div>
+                  <div>{el.activityLog[0].payload.slots[0][ele]}</div>
+                </div>
+              ))}
             </div>
 
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -133,7 +136,7 @@ function SPToolCard({data}) {
             <Collapse in={checked[index]}>
               <Divider variant="fullWidth" />
               <Typography variant="subtitle1" gutterBottom sx={{margin: "5px", padding: "5px"}}>
-                {JSON.stringify(el.payload, null, 2)}
+                {JSON.stringify(el.activityLog[0].payload, null, 2)}
               </Typography>
             </Collapse>
           </div>
@@ -143,4 +146,4 @@ function SPToolCard({data}) {
   );
 }
 
-export default SPToolCard;
+export default SlotNxtOpsCard;

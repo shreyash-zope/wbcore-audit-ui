@@ -8,7 +8,6 @@ import {useState} from "react";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreSharpIcon from "@mui/icons-material/ExpandMoreSharp";
 import ExpandLessSharpIcon from "@mui/icons-material/ExpandLessSharp";
-// import dayjs from "dayjs";
 
 const table_head = {
   fontWeight: "bold",
@@ -19,13 +18,13 @@ const table_body = {
   fontSize: "15px",
 };
 
-function SPToolCard({data}) {
+function SlotNxtSupportCard({data}) {
   const [checked, setChecked] = useState({});
 
   const handleChange = index => {
     setChecked(prev => ({
       ...prev,
-      [index]: !prev[index], // Toggle the collapse state for the specific card
+      [index]: !prev[index],
     }));
   };
 
@@ -45,41 +44,13 @@ function SPToolCard({data}) {
             >
               <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div>Type</div>
-                <div>{el.type || "sp_change"}</div>
-              </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>Article Number</div>
-                <div>{el.payload.articleNumber}</div>
+                <div>{el.activityLog[0].type}</div>
               </div>
             </div>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <div
-              style={{
-                justifyContent: "space-evenly",
-                display: "flex",
-                flexDirection: "column",
-                width: "18%",
-                gap: "20px",
-              }}
-            >
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>FC Code</div>
-                <div>{el.payload.fcCode}</div>
-              </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>JIT</div>
-                <div>{el.payload.JIT}</div>
-              </div>
-              <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div>FFMplantCode</div>
-                <div>{el.payload.FFMplantCode || el.payload.fcCode}</div>
-              </div>
-            </div>
-
             <Divider orientation="vertical" variant="middle" flexItem />
             <div>
               <div>Activity logs :</div>
-              <Table sx={{minWidth: 650}} aria-label="simple table">
+              <Table sx={{minWidth: 750}} aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell sx={table_head}>Action</TableCell>
@@ -120,12 +91,8 @@ function SPToolCard({data}) {
               <div style={{fontSize: "15px"}}>{el.createdAt}</div>
             </div>
           </div>
-          {/* <Divider orientation="horizontal" variant="fullWidth" flexItem /> */}
           <div className="more-details">
             <div style={{display: "flex", justifyContent: "center"}}>
-              {/* <Button onClick={() => handleChange(index)} color="inherit" variant="outlined">
-                More Info
-              </Button> */}
               <IconButton aria-label="expand" onClick={() => handleChange(index)}>
                 {checked[index] ? <ExpandLessSharpIcon /> : <ExpandMoreSharpIcon />}
               </IconButton>
@@ -133,7 +100,7 @@ function SPToolCard({data}) {
             <Collapse in={checked[index]}>
               <Divider variant="fullWidth" />
               <Typography variant="subtitle1" gutterBottom sx={{margin: "5px", padding: "5px"}}>
-                {JSON.stringify(el.payload, null, 2)}
+                {JSON.stringify(el.activityLog[0].payload, null, 2)}
               </Typography>
             </Collapse>
           </div>
@@ -143,4 +110,4 @@ function SPToolCard({data}) {
   );
 }
 
-export default SPToolCard;
+export default SlotNxtSupportCard;
