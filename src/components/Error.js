@@ -1,6 +1,7 @@
 import {Box, Typography} from "@mui/material";
 
-function Error({message}) {
+function Error({message, setError}) {
+  setError("");
   return (
     <Box
       sx={{
@@ -22,7 +23,7 @@ function Error({message}) {
       }}
     >
       <Typography variant="h6" color="textPrimary">
-        Error !
+        Error &#x1F4A5;
       </Typography>
       <Typography variant="body1" color="textSecondary">
         {message}

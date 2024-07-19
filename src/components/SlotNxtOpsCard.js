@@ -35,7 +35,7 @@ function SlotNxtOpsCard({data}) {
   const handleChange = index => {
     setChecked(prev => ({
       ...prev,
-      [index]: !prev[index], // Toggle the collapse state for the specific card
+      [index]: !prev[index],
     }));
   };
 
@@ -63,7 +63,7 @@ function SlotNxtOpsCard({data}) {
                   <div>{el.serviceName}</div>
                 </div>
               </div>
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider orientation="vertical" flexItem />
               <div
                 style={{
                   justifyContent: "center",
@@ -94,7 +94,7 @@ function SlotNxtOpsCard({data}) {
                 ))}
               </div>
 
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider orientation="vertical" flexItem />
               <div>
                 <div className="field-title">Activity logs :</div>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -132,7 +132,7 @@ function SlotNxtOpsCard({data}) {
                   </TableBody>
                 </Table>
               </div>
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider orientation="vertical" flexItem />
               <div
                 style={{
                   display: "flex",
@@ -162,7 +162,7 @@ function SlotNxtOpsCard({data}) {
                 </IconButton>
               </div>
               <Collapse in={checked[index]}>
-                <Divider variant="fullWidth" />
+                <Divider />
                 <Typography variant="subtitle1" gutterBottom sx={{margin: "5px", padding: "5px"}}>
                   {JSON.stringify(el.activityLog[0].payload, null, 2)}
                 </Typography>

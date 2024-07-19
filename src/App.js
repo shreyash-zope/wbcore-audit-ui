@@ -32,7 +32,7 @@ function App() {
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : error ? (
-        <Error message={error} />
+        <Error message={error} setError={setError} />
       ) : module === "spupdate" || module === "batchflip" ? (
         <SPToolCard data={data} error={error} />
       ) : module === "slotnxtops" ? (

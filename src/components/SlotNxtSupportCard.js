@@ -59,7 +59,7 @@ function SlotNxtSupportCard({data}) {
                   <div>{el.activityLog[0].type}</div>
                 </div>
               </div>
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider orientation="vertical" flexItem />
               <div>
                 <div className="field-title">Activity logs :</div>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -97,7 +97,7 @@ function SlotNxtSupportCard({data}) {
                   </TableBody>
                 </Table>
               </div>
-              <Divider orientation="vertical" variant="middle" flexItem />
+              <Divider orientation="vertical" flexItem />
               <div
                 style={{
                   display: "flex",
