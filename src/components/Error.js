@@ -4,10 +4,10 @@ function Error({message}) {
   return (
     <Box
       sx={{
-        border: "2px solid #f44336", // Red border to indicate error
+        border: "2px solid #f44336",
         borderRadius: 8,
-        backgroundColor: "#ffebee", // Light red background
-        boxShadow: 3, // Subtle shadow for depth
+        backgroundColor: "#ffebee",
+        boxShadow: 3,
         width: 400,
         height: 200,
         display: "flex",
@@ -22,7 +22,7 @@ function Error({message}) {
       }}
     >
       <Typography variant="h6" color="textPrimary">
-        Error
+        Error !
       </Typography>
       <Typography variant="body1" color="textSecondary">
         {message}

@@ -22,7 +22,7 @@ function DataNotFound() {
       }}
     >
       <Typography variant="h6" color="textPrimary">
-        No results found
+        No results found !
       </Typography>
       <Typography variant="body1" color="textSecondary">
         Please try another search query.

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import result from "../data/sptool";
+// import result from "../data/sptool";
 
 import ModuleSelect from "./ModuleSelect";
 import Filter from "./Filter";
@@ -13,8 +13,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
-// const result = [];
-function Header({onSearch, setIsLoading}) {
+function Header({onSearch, setIsLoading, setError}) {
   const [module, setModule] = useState("");
   const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
   const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
@@ -30,16 +29,18 @@ function Header({onSearch, setIsLoading}) {
 
   const fetchData = async (filters, selectedModule) => {
     try {
-      // const queryString = new URLSearchParams(filters).toString();
+      const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
-      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
-      // const result = await response.json();
+      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
       onSearch(result.data, selectedModule);
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,7 +55,6 @@ function Header({onSearch, setIsLoading}) {
         <ModuleSelect setModule={setModule} module={module} handleSearch={handleSearch} />
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          {/* <DesktopDateTimePicker localeText={{start: "From", end: "To"}} /> */}
           <DesktopDateTimeRangePicker
             localeText={{start: "From", end: "To"}}
             defaultValue={[dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]}
