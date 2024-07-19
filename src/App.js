@@ -8,20 +8,28 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import SlotNxtSupportCard from "./components/SlotNxtSupportCard";
+import {Backdrop, CircularProgress} from "@mui/material";
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [module, setModule] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleData = (fetchedData, selectedModule) => {
     setData(fetchedData);
     setModule(selectedModule);
+    setIsLoading(false);
   };
 
   return (
     <div className="container">
-      <Header onSearch={handleData} />
-      {module === "spupdate" || module === "batchflip" ? (
+      <Header onSearch={handleData} setIsLoading={setIsLoading} />
+
+      {isLoading ? (
+        <Backdrop sx={{color: "#fff", zIndex: theme => theme.zIndex.drawer + 1}} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : module === "spupdate" || module === "batchflip" ? (
         <SPToolCard data={data} />
       ) : module === "slotnxtops" ? (
         <SlotNxtOpsCard data={data} />
