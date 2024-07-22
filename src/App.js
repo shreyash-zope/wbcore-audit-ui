@@ -29,7 +29,10 @@ function App() {
 
       {isLoading ? (
         <Backdrop sx={{color: "#fff", zIndex: theme => theme.zIndex.drawer + 1}} open={isLoading}>
-          <CircularProgress color="inherit" />
+          <div className="loading">
+            <div style={{fontSize: "20px"}}>Searching</div>
+            <CircularProgress color="inherit" />
+          </div>
         </Backdrop>
       ) : error ? (
         <Error message={error} setError={setError} />

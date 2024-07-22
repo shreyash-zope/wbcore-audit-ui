@@ -1,4 +1,4 @@
-import {Collapse, Divider, Typography} from "@mui/material";
+import {Box, Collapse, Divider, Typography} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,6 +11,18 @@ import ExpandLessSharpIcon from "@mui/icons-material/ExpandLessSharp";
 import Chip from "@mui/material/Chip";
 import DataNotFound from "./DataNotFound";
 // import dayjs from "dayjs";
+
+const styles = {
+  display: "flex",
+  border: "1px solid #bdbdbd",
+  borderRadius: "15px",
+  backgroundColor: "#f5f5f5",
+  boxShadow: 3,
+  justifyContent: "space-around",
+  flexDirection: "column",
+  margin: "15px 20px",
+  padding: "20px 20px 0px",
+};
 
 const table_head = {
   fontWeight: "bold",
@@ -33,10 +45,11 @@ const status = {
 
 function SPToolCard({data}) {
   const [checked, setChecked] = useState({});
+
   const handleChange = index => {
     setChecked(prev => ({
       ...prev,
-      [index]: !prev[index], // Toggle the collapse state for the specific card
+      [index]: !prev[index],
     }));
   };
 
@@ -44,7 +57,7 @@ function SPToolCard({data}) {
     <div>
       {data.length ? (
         data.map((el, index) => (
-          <div className="myCard" key={index}>
+          <Box sx={styles} key={index}>
             <div className="main-card">
               <div
                 style={{
@@ -149,12 +162,8 @@ function SPToolCard({data}) {
                 </div>
               </div>
             </div>
-            {/* <Divider orientation="horizontal" variant="fullWidth" flexItem /> */}
             <div className="more-details">
               <div style={{display: "flex", justifyContent: "center"}}>
-                {/* <Button onClick={() => handleChange(index)} color="inherit" variant="outlined">
-                More Info
-              </Button> */}
                 <IconButton aria-label="expand" onClick={() => handleChange(index)}>
                   {checked[index] ? <ExpandLessSharpIcon /> : <ExpandMoreSharpIcon />}
                 </IconButton>
@@ -166,7 +175,7 @@ function SPToolCard({data}) {
                 </Typography>
               </Collapse>
             </div>
-          </div>
+          </Box>
         ))
       ) : (
         <DataNotFound />

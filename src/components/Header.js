@@ -1,17 +1,29 @@
 import {useState} from "react";
-// import result from "../data/slotnxtsupport";
+// import result from "../data/new";
 
 import ModuleSelect from "./ModuleSelect";
 import Filter from "./Filter";
 import {DesktopDateTimeRangePicker, LocalizationProvider} from "@mui/x-date-pickers-pro";
 import {AdapterDayjs} from "@mui/x-date-pickers-pro/AdapterDayjs";
-import {Button} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(timezone);
 dayjs.extend(utc);
+
+const styles = {
+  border: "1px solid #bdbdbd",
+  borderRadius: "15px",
+  backgroundColor: "#f5f5f5",
+  boxShadow: 3,
+  display: "flex",
+  alignItems: "center",
+  height: "70px",
+  gap: "30px",
+  justifyContent: "center",
+};
 
 function Header({onSearch, setIsLoading, setError}) {
   const [module, setModule] = useState("");
@@ -29,6 +41,7 @@ function Header({onSearch, setIsLoading, setError}) {
 
   const fetchData = async (filters, selectedModule) => {
     try {
+      setError("");
       const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
       const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
@@ -51,7 +64,7 @@ function Header({onSearch, setIsLoading, setError}) {
 
   return (
     <div>
-      <header className="header">
+      <Box sx={styles}>
         <ModuleSelect setModule={setModule} module={module} handleSearch={handleSearch} />
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -68,7 +81,7 @@ function Header({onSearch, setIsLoading, setError}) {
         </Button>
 
         <Filter />
-      </header>
+      </Box>
     </div>
   );
 }

@@ -4,10 +4,10 @@ function DataNotFound() {
   return (
     <Box
       sx={{
-        border: "2px solid #f44336", // Red border to indicate error
+        border: "2px solid #bdbdbd",
         borderRadius: 8,
-        backgroundColor: "#ffebee", // Light red background
-        boxShadow: 3, // Subtle shadow for depth
+        backgroundColor: "#f5f5f5",
+        boxShadow: 3,
         width: 400,
         height: 200,
         display: "flex",

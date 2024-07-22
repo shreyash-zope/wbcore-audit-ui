@@ -1,4 +1,4 @@
-import {Chip, Collapse, Divider, Typography} from "@mui/material";
+import {Box, Chip, Collapse, Divider, Typography} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,6 +9,18 @@ import IconButton from "@mui/material/IconButton";
 import ExpandMoreSharpIcon from "@mui/icons-material/ExpandMoreSharp";
 import ExpandLessSharpIcon from "@mui/icons-material/ExpandLessSharp";
 import DataNotFound from "./DataNotFound";
+
+const styles = {
+  display: "flex",
+  border: "1px solid #bdbdbd",
+  borderRadius: "15px",
+  backgroundColor: "#f5f5f5",
+  boxShadow: 3,
+  justifyContent: "space-around",
+  flexDirection: "column",
+  margin: "15px 20px",
+  padding: "20px 20px 0px",
+};
 
 const table_head = {
   fontWeight: "bold",
@@ -43,7 +55,7 @@ function SlotNxtOpsCard({data}) {
     <div>
       {data.length ? (
         data.map((el, index) => (
-          <div className="myCard" key={index}>
+          <Box sx={styles} key={index}>
             <div className="main-card">
               <div
                 style={{
@@ -168,7 +180,7 @@ function SlotNxtOpsCard({data}) {
                 </Typography>
               </Collapse>
             </div>
-          </div>
+          </Box>
         ))
       ) : (
         <DataNotFound />

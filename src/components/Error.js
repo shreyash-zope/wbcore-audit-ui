@@ -1,7 +1,6 @@
 import {Box, Typography} from "@mui/material";
 
-function Error({message, setError}) {
-  setError("");
+function Error({message}) {
   return (
     <Box
       sx={{
