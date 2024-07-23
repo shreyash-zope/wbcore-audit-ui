@@ -53,6 +53,8 @@ function SPToolCard({data}) {
     }));
   };
 
+  console.log(data.length);
+
   return (
     <div>
       {data.length ? (
@@ -168,7 +170,7 @@ function SPToolCard({data}) {
                   {checked[index] ? <ExpandLessSharpIcon /> : <ExpandMoreSharpIcon />}
                 </IconButton>
               </div>
-              <Collapse in={checked[index]}>
+              <Collapse in={checked[index]} unmountOnExit>
                 <Divider variant="fullWidth" />
                 <Typography variant="subtitle1" gutterBottom sx={{margin: "5px", padding: "5px"}}>
                   {JSON.stringify(el.payload, null, 2)}

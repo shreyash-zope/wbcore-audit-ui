@@ -1,51 +1,22 @@
 import "./App.css";
-import React, {useState} from "react";
-import Header from "./components/Header";
-import SPToolCard from "./components/SPToolCard";
-import SlotNxtOpsCard from "./components/SlotNxtOpsCard";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import SlotNxtSupportCard from "./components/SlotNxtSupportCard";
-import {Backdrop, CircularProgress} from "@mui/material";
-import Error from "./components/Error";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Home from "./components/Home";
+import Logs from "./components/Logs";
+import Charts from "./components/Charts";
 
 function App() {
-  const [data, setData] = useState();
-  const [module, setModule] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleData = (fetchedData, selectedModule) => {
-    setData(fetchedData);
-    setModule(selectedModule);
-    setIsLoading(false);
-  };
-
   return (
-    <div className="container">
-      <Header onSearch={handleData} setIsLoading={setIsLoading} setError={setError} />
-
-      {isLoading ? (
-        <Backdrop sx={{color: "#fff", zIndex: theme => theme.zIndex.drawer + 1}} open={isLoading}>
-          <div className="loading">
-            <div style={{fontSize: "20px"}}>Searching</div>
-            <CircularProgress color="inherit" />
-          </div>
-        </Backdrop>
-      ) : error ? (
-        <Error message={error} setError={setError} />
-      ) : module === "spupdate" || module === "batchflip" ? (
-        <SPToolCard data={data} error={error} />
-      ) : module === "slotnxtops" ? (
-        <SlotNxtOpsCard data={data} />
-      ) : module === "slotnxtsupport" ? (
-        <SlotNxtSupportCard data={data} />
-      ) : (
-        ""
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index path="/" element={<Home />}></Route>
+        <Route path="/logs" element={<Logs />}></Route>
+        <Route path="/charts" element={<Charts />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

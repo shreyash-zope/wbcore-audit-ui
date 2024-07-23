@@ -1,5 +1,5 @@
 import {useState} from "react";
-// import result from "../data/new";
+import result from "../data/sptool";
 
 import ModuleSelect from "./ModuleSelect";
 import Filter from "./Filter";
@@ -42,13 +42,13 @@ function Header({onSearch, setIsLoading, setError}) {
   const fetchData = async (filters, selectedModule) => {
     try {
       setError("");
-      const queryString = new URLSearchParams(filters).toString();
+      // const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
-      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json();
+      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! Status: ${response.status}`);
+      // }
+      // const result = await response.json();
       onSearch(result.data, selectedModule);
     } catch (error) {
       setError(error.message);
