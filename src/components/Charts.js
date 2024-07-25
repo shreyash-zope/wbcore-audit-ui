@@ -3,11 +3,14 @@ import {
   Button,
   Checkbox,
   FormControl,
+  IconButton,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
+  Tooltip,
+  Zoom,
 } from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {DesktopDateTimeRangePicker} from "@mui/x-date-pickers-pro";
@@ -17,6 +20,8 @@ import {useState} from "react";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import {BarChart} from "@mui/x-charts";
 import Error from "./Error";
+import {Link} from "react-router-dom";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 const styles = {
   border: "1px solid #bdbdbd",
@@ -26,55 +31,19 @@ const styles = {
   display: "flex",
   alignItems: "center",
   height: "70px",
-  gap: "40px",
-  justifyContent: "center",
+  gap: "80px",
+  padding: "0 40px",
 };
 
-// const result = {
-//   status: 200,
-//   data: {
-//     "2024-07-20": {
-//       criticalTasks: 1,
-//       nonCriticalTasks: 0,
-//     },
-//     "2024-07-17": {
-//       criticalTasks: 4,
-//       nonCriticalTasks: 49,
-//     },
-//     "2024-07-18": {
-//       criticalTasks: 6,
-//       nonCriticalTasks: 0,
-//     },
-//     "2024-07-16": {
-//       criticalTasks: 15,
-//       nonCriticalTasks: 0,
-//     },
-//     "2024-07-15": {
-//       criticalTasks: 20,
-//       nonCriticalTasks: 49,
-//     },
-//     "2024-07-14": {
-//       criticalTasks: 25,
-//       nonCriticalTasks: 0,
-//     },
-//   },
-// };
-
-const result = {
-  status: 200,
-  data: {
-    AAB0: {
-      criticalTasks: 3,
-      nonCriticalTasks: 22,
-    },
-    AAA0: {
-      criticalTasks: 0,
-      nonCriticalTasks: 27,
-    },
-  },
-};
 function Charts() {
-  const FC = ["Kanjur", "Mulund", "Kalyan", "Panvel"];
+  const FC = {
+    AAA0: "Kanjur",
+    AAB0: "Mulund",
+    AAC0: "Panvel",
+    AAD0: "Kalyan",
+    AAE0: "MiraRoad",
+    AAF0: "Belapur",
+  };
   const [fcId, setFcId] = useState([]);
   const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
   const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
@@ -103,15 +72,15 @@ function Charts() {
 
   const handleGenerate = async () => {
     try {
-      // const filters = {from, to, fcId: fcId.toString()};
+      const filters = {from, to, fcId: fcId.toString()};
       setError("");
-      // const queryString = new URLSearchParams(filters).toString();
-      // const response = await fetch(`http://localhost:3909/core/audits/priority?${queryString}`);
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
-      // const result = await response.json();
-      // console.log(formatData(result.data));
+      const queryString = new URLSearchParams(filters).toString();
+      const response = await fetch(`http://localhost:3909/core/audits/priority?${queryString}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log(formatData(result.data));
 
       setData(formatData(result.data));
     } catch (error) {
@@ -134,30 +103,44 @@ function Charts() {
             defaultValue={[dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]}
             onChange={handleDate}
             value={date}
+            sx={{marginLeft: "17%"}}
           />
         </LocalizationProvider>
+
+        <Button
+          variant="contained"
+          onClick={handleGenerate}
+          endIcon={<BarChartIcon />}
+          sx={{marginRight: "auto", marginLeft: "80px"}}
+        >
+          Generate
+        </Button>
+
         <FormControl sx={{m: 1, width: 300}}>
-          <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+          <InputLabel id="demo-multiple-checkbox-label">FC</InputLabel>
           <Select
             labelId="demo-multiple-checkbox-label"
             id="demo-multiple-checkbox"
             multiple
             value={fcId}
             onChange={handleFcChange}
-            input={<OutlinedInput label="Tag" />}
+            input={<OutlinedInput label="FC" />}
             renderValue={selected => selected.join(", ")}
           >
-            {FC.map(fc => (
+            {Object.keys(FC).map(fc => (
               <MenuItem key={fc} value={fc}>
                 <Checkbox checked={fcId.indexOf(fc) > -1} />
-                <ListItemText primary={fc} />
+                <ListItemText primary={`${fc} - ${FC[fc]}`} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <Button variant="contained" onClick={handleGenerate} endIcon={<BarChartIcon />}>
-          Generate
-        </Button>
+
+        <Tooltip title="Home" TransitionComponent={Zoom}>
+          <IconButton component={Link} to="/">
+            <HomeOutlinedIcon fontSize="large" sx={{color: "black"}} />
+          </IconButton>
+        </Tooltip>
       </Box>
       {error ? (
         <Error message={error} />
@@ -167,23 +150,24 @@ function Charts() {
             border: "2px solid #bdbdbd",
             borderRadius: 8,
             backgroundColor: "#f5f5f5",
+            color: "white",
             boxShadow: 3,
-            width: "60%",
-            height: "50%",
+            width: "70%",
+            height: "60%",
             padding: 5,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            top: "45%",
+            top: "48%",
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
         >
           <BarChart
             series={[
-              {label: "critical", data: data.critical},
-              {label: "non-critical", data: data.nonCritical},
+              {label: "critical", data: data.critical, highlightScope: {highlight: "item"}},
+              {label: "non-critical", data: data.nonCritical, highlightScope: {highlight: "item"}},
             ]}
             xAxis={[
               {
@@ -191,8 +175,13 @@ function Charts() {
                 scaleType: "band",
                 categoryGapRatio: 0.4,
                 barGapRatio: 0.05,
+                labelStyle: {
+                  color: "blue",
+                },
               },
             ]}
+            height={600}
+            width={1200}
           />
         </Box>
       ) : (

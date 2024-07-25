@@ -53,8 +53,6 @@ function SPToolCard({data}) {
     }));
   };
 
-  console.log(data.length);
-
   return (
     <div>
       {data.length ? (
