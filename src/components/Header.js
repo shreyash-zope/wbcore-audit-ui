@@ -50,13 +50,13 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
       setError("");
       filters.page = page;
       filters.size = size;
-      // const queryString = new URLSearchParams(filters).toString();
+      const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
-      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! Status: ${response.status}`);
-      // }
-      // const result = await response.json();
+      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
       setCount(Math.trunc(result.totalRecords / size) + 1);
       onSearch(result.data, selectedModule);
     } catch (error) {
