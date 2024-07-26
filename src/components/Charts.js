@@ -36,14 +36,172 @@ const styles = {
 };
 
 function Charts() {
-  const FC = {
-    AAA0: "Kanjur",
-    AAB0: "Mulund",
-    AAC0: "Panvel",
-    AAD0: "Kalyan",
-    AAE0: "MiraRoad",
-    AAF0: "Belapur",
-  };
+  const FC = [
+    {
+      fcName: "Kanjur",
+      fcId: "AAA0",
+    },
+    {
+      fcName: "Kalyan",
+      fcId: "AAD0",
+    },
+    {
+      fcName: "Mulund",
+      fcId: "AAB0",
+    },
+    {
+      fcName: "MiraRoad",
+      fcId: "AAE0",
+    },
+    {
+      fcName: "Kiwale",
+      fcId: "AAG0",
+    },
+    {
+      fcName: "Belapur",
+      fcId: "AAF0",
+    },
+    {
+      fcName: "Kushaiguda",
+      fcId: "CAD0",
+    },
+    {
+      fcName: "CK Palya",
+      fcId: "DAB0",
+    },
+    {
+      fcName: "Nava Naroda",
+      fcId: "FAA0",
+    },
+    {
+      fcName: "Jahangirpura",
+      fcId: "FAC0",
+    },
+    {
+      fcName: "Sardar Nagar",
+      fcId: "FAB0",
+    },
+    {
+      fcName: "Kanadia Road",
+      fcId: "IAA0",
+    },
+    {
+      fcName: "Ayodhya Bypass",
+      fcId: "IAB0",
+    },
+    {
+      fcName: "Hennur",
+      fcId: "DAA0",
+    },
+    {
+      fcName: "Gachibowli",
+      fcId: "UCA0",
+    },
+    {
+      fcName: "Panvel",
+      fcId: "AAC0",
+    },
+    {
+      fcName: "Dombivali",
+      fcId: "AAH0",
+    },
+    {
+      fcName: "Kolhapur",
+      fcId: "AAL0",
+    },
+    {
+      fcName: "Hingna",
+      fcId: "AAK0",
+    },
+    {
+      fcName: "Gajuwaka",
+      fcId: "EAA0",
+    },
+    {
+      fcName: "Pedda Amberpet",
+      fcId: "CAC0",
+    },
+    {
+      fcName: "Thane Cadbury",
+      fcId: "AAI0",
+    },
+    {
+      fcName: "NH 6, Bhilai FC",
+      fcId: "PAB0",
+    },
+    {
+      fcName: "Belgaum",
+      fcId: "DAD0",
+    },
+    {
+      fcName: "Vijayawada",
+      fcId: "EAB0",
+    },
+    {
+      fcName: "Karamsad, Anand",
+      fcId: "FAE0",
+    },
+    {
+      fcName: "Ring Road, Raipur",
+      fcId: "PAA0",
+    },
+    {
+      fcId: "FAD0",
+      fcName: "Sanand",
+    },
+    {
+      fcId: "GAA0",
+      fcName: "Malviya Nagar, Jaipur",
+    },
+    {
+      fcId: "QAA0",
+      fcName: "Ghaziabad",
+    },
+    {
+      fcId: "MNA0",
+      fcName: "Peer Muchalla",
+    },
+    {
+      fcId: "AAM0",
+      fcName: "Vasai",
+    },
+    {
+      fcId: "KAA0",
+      fcName: "Grand Mall, Chennai - DGR",
+    },
+    {
+      fcId: "CAF0",
+      fcName: "Karkhana",
+    },
+    {
+      fcId: "AAO0",
+      fcName: "Wagholi",
+    },
+    {
+      fcId: "KAB0",
+      fcName: "Perungudi",
+    },
+    {
+      fcId: "FC01",
+      fcName: "testingFC",
+    },
+    {
+      fcId: "FC00",
+      fcName: "Testing FC",
+    },
+    {
+      fcId: "AA00",
+      fcName: "Thane IFC",
+    },
+    {
+      fcId: "AAP0",
+      fcName: "Goregaon FC",
+    },
+    {
+      fcId: "AB00",
+      fcName: "Sumeet Bhiwandi",
+    },
+  ];
   const [fcId, setFcId] = useState([]);
   const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
   const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
@@ -127,10 +285,10 @@ function Charts() {
             input={<OutlinedInput label="FC" />}
             renderValue={selected => selected.join(", ")}
           >
-            {Object.keys(FC).map(fc => (
-              <MenuItem key={fc} value={fc}>
-                <Checkbox checked={fcId.indexOf(fc) > -1} />
-                <ListItemText primary={`${fc} - ${FC[fc]}`} />
+            {FC.map(fc => (
+              <MenuItem key={fc.fcId} value={fc.fcId}>
+                <Checkbox checked={fcId.indexOf(fc.fcId) > -1} />
+                <ListItemText primary={`${fc.fcId} - ${fc.fcName}`} />
               </MenuItem>
             ))}
           </Select>

@@ -5,7 +5,7 @@ import ModuleSelect from "./ModuleSelect";
 import SPToolFilter from "./SPToolFilter";
 import {DesktopDateTimeRangePicker, LocalizationProvider} from "@mui/x-date-pickers-pro";
 import {AdapterDayjs} from "@mui/x-date-pickers-pro/AdapterDayjs";
-import {Box, Button, IconButton, Tooltip} from "@mui/material";
+import {Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, Tooltip} from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -30,22 +30,26 @@ const styles = {
   padding: "0 30px",
 };
 
-function Header({onSearch, setIsLoading, setError}) {
+const pageSize = [25, 50, 75, 100];
+
+function Header({onSearch, setIsLoading, setError, page, setCount}) {
   const [module, setModule] = useState("");
   const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
   const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
   const [to, setTo] = useState(dayjs(date[1]).add(330, "m").toJSON());
   const [extraFilter, setExtraFilter] = useState({});
+  const [size, setSize] = useState(25);
 
   const handleDate = newDate => {
     setDate(newDate);
     setFrom(dayjs(newDate[0]).add(330, "m").toJSON());
     setTo(dayjs(newDate[1]).add(330, "m").toJSON());
   };
-
   const fetchData = async (filters, selectedModule) => {
     try {
       setError("");
+      filters.page = page;
+      filters.size = size;
       const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
       const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
@@ -53,6 +57,7 @@ function Header({onSearch, setIsLoading, setError}) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const result = await response.json();
+      setCount(Math.trunc(result.totalRecords / size) + 1);
       onSearch(result.data, selectedModule);
     } catch (error) {
       setError(error.message);
@@ -89,10 +94,25 @@ function Header({onSearch, setIsLoading, setError}) {
           search
         </Button>
 
-        {module === "spupdate" ? (
+        <FormControl sx={{marginLeft: "auto", marginRight: "20px", minWidth: 100}} size="small">
+          <InputLabel id="rows-per-page">Size</InputLabel>
+          <Select
+            labelId="rows-per-page"
+            id="rows-per-page"
+            value={size}
+            label="Size"
+            onChange={event => setSize(event.target.value)}
+          >
+            {pageSize.map(page => (
+              <MenuItem value={page}>{page}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {module === "spupdate" || module === "batchflip" ? (
           <SPToolFilter appliedFilters={handleFilter} />
         ) : (
-          <div style={{marginRight: "20px", marginLeft: "auto"}}>
+          <div>
             <Button variant="contained" startIcon={<FilterListRoundedIcon />}>
               filter
             </Button>

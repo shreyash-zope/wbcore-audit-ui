@@ -219,14 +219,14 @@ function SPToolFilter({appliedFilters}) {
     setOpen(false);
     const filter = {};
     if (fcId.length > 0) filter.fcId = fcId.toString();
-    if (articleNumber > 0) filter.articleNumber = articleNumber;
+    if (articleNumber) filter.articleNumber = articleNumber;
     if (type.length > 0) filter.type = type.toString();
     if (status.length > 0) filter.status = status.toString();
     appliedFilters(filter);
   };
 
   return (
-    <div style={{marginRight: "20px", marginLeft: "auto"}}>
+    <div>
       <Button onClick={toggleDrawer(true)} variant="contained" startIcon={<FilterListRoundedIcon />}>
         filter
       </Button>
