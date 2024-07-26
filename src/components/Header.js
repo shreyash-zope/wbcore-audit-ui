@@ -100,7 +100,7 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
           />
         </LocalizationProvider>
 
-        <Button onClick={() => searchBtnClick(module)} variant="contained" startIcon={<SearchRoundedIcon />}>
+        <Button onClick={searchBtnClick} variant="contained" startIcon={<SearchRoundedIcon />}>
           search
         </Button>
 
