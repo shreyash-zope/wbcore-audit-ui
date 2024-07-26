@@ -26,7 +26,14 @@ function Logs() {
   };
   return (
     <div className="container">
-      <Header onSearch={handleData} setIsLoading={setIsLoading} setError={setError} page={page} setCount={setCount} />
+      <Header
+        onSearch={handleData}
+        setIsLoading={setIsLoading}
+        setError={setError}
+        page={page}
+        setCount={setCount}
+        setPage={setPage}
+      />
 
       {isLoading ? (
         <Backdrop sx={{color: "#fff", zIndex: theme => theme.zIndex.drawer + 1}} open={isLoading}>

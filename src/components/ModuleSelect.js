@@ -14,7 +14,7 @@ const style = {
   p: 4,
 };
 
-function ModuleSelect({setModule, module, handleSearch}) {
+function ModuleSelect({setModule, module, handleSearch, setPage}) {
   const modules = ["slotnxtops", "slotnxtsupport", "spupdate", "batchflip"];
 
   const [open, setOpen] = useState(true);
@@ -24,6 +24,7 @@ function ModuleSelect({setModule, module, handleSearch}) {
   const handleClose = () => setOpen(false);
 
   const handleModule = event => {
+    setPage(1);
     setModule(event.target.value);
     setFilterApplied(true);
     handleClose();

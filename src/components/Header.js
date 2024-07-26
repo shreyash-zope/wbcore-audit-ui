@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-// import result from "../data/sptool";
+import result from "../data/sptool";
 
 import ModuleSelect from "./ModuleSelect";
 import SPToolFilter from "./SPToolFilter";
@@ -32,7 +32,7 @@ const styles = {
 
 const pageSize = [25, 50, 75, 100];
 
-function Header({onSearch, setIsLoading, setError, page, setCount}) {
+function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
   const [module, setModule] = useState("");
   const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
   const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
@@ -50,13 +50,13 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
       setError("");
       filters.page = page;
       filters.size = size;
-      const queryString = new URLSearchParams(filters).toString();
+      // const queryString = new URLSearchParams(filters).toString();
       setIsLoading(true);
-      const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json();
+      // const response = await fetch(`http://localhost:3909/core/audits?${queryString}`);
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! Status: ${response.status}`);
+      // }
+      // const result = await response.json();
       setCount(Math.trunc(result.totalRecords / size) + 1);
       onSearch(result.data, selectedModule);
     } catch (error) {
@@ -71,10 +71,14 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
   };
 
   const handleSearch = selectedModule => {
-    console.log("handleSearch");
     const filters = {module: selectedModule, from, to};
     Object.assign(filters, extraFilter);
     fetchData(filters, selectedModule);
+  };
+
+  const searchBtnClick = () => {
+    setPage(1);
+    handleSearch(module);
   };
 
   useEffect(() => {
@@ -85,7 +89,7 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
   return (
     <div>
       <Box sx={styles}>
-        <ModuleSelect setModule={setModule} module={module} handleSearch={handleSearch} />
+        <ModuleSelect setModule={setModule} module={module} handleSearch={handleSearch} setPage={setPage} />
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DesktopDateTimeRangePicker
@@ -96,7 +100,7 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
           />
         </LocalizationProvider>
 
-        <Button onClick={() => handleSearch(module)} variant="contained" startIcon={<SearchRoundedIcon />}>
+        <Button onClick={() => searchBtnClick(module)} variant="contained" startIcon={<SearchRoundedIcon />}>
           search
         </Button>
 
