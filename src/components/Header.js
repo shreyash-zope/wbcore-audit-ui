@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 // import result from "../data/sptool";
 
 import ModuleSelect from "./ModuleSelect";
@@ -71,10 +71,16 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
   };
 
   const handleSearch = selectedModule => {
+    console.log("handleSearch");
     const filters = {module: selectedModule, from, to};
     Object.assign(filters, extraFilter);
     fetchData(filters, selectedModule);
   };
+
+  useEffect(() => {
+    if (module) handleSearch(module);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   return (
     <div>
@@ -103,8 +109,10 @@ function Header({onSearch, setIsLoading, setError, page, setCount}) {
             label="Size"
             onChange={event => setSize(event.target.value)}
           >
-            {pageSize.map(page => (
-              <MenuItem value={page}>{page}</MenuItem>
+            {pageSize.map(size => (
+              <MenuItem key={size} value={size}>
+                {size}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
