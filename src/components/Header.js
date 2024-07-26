@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import result from "../data/sptool";
+// import result from "../data/sptool";
 
 import ModuleSelect from "./ModuleSelect";
 import SPToolFilter from "./SPToolFilter";
