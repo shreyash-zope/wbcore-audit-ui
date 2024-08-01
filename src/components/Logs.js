@@ -60,7 +60,7 @@ function Logs() {
           left: "50%",
           margin: "30px 0",
           transform: "translate(-50%, -50%)",
-          display: module ? (data ? "" : "none") : "none",
+          display: module ? (data.length !== 0 ? (!isLoading ? "" : "none") : "none") : "none",
         }}
       >
         <Pagination

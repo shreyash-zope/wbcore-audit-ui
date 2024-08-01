@@ -24,7 +24,7 @@ import {
    TextField,
 } from "@mui/material";
 
-function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
+function SlotNxtOpsFilter({appliedFilters, fetchData, initialFilter, setPage}) {
    const [open, setOpen] = useState(false);
 
    const toggleDrawer = newOpen => () => {
@@ -197,28 +197,22 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
          fcName: "Sumeet Bhiwandi",
       },
    ];
-   const priceType = ["spupdate", "inclusion", "exclusion", "batchflip", "articleMapping"];
+   const slotnxtopsType = ["bulkUpdateLeadTime", "fc", "channel"];
    const statusArr = ["created", "approved", "committed", "rejected", "originFailed", "underReview", "autoRejected"];
    const [fcId, setFcId] = useState([]);
-   const [articleNumber, setArticleNumber] = useState("");
-   const [type, setType] = useState([]);
+   const [type, setType] = useState();
    const [status, setStatus] = useState([]);
-   const [userId, setUserId] = useState("");
+   const [pincode, setPincode] = useState("");
+   const [pupId, setPupId] = useState("");
    const [sortType, setSortType] = useState("desc");
+   const [shipMode, setShipMode] = useState("");
+   const [userId, setUserId] = useState("");
 
    const handleFcChange = event => {
-      event.preventDefault();
       const {
          target: {value},
       } = event;
       setFcId(typeof value === "string" ? value.split(",") : value);
-   };
-
-   const handleTypeChange = event => {
-      const {
-         target: {value},
-      } = event;
-      setType(typeof value === "string" ? value.split(",") : value);
    };
 
    const handleStatusChange = event => {
@@ -232,10 +226,12 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
       setOpen(false);
       const filter = {};
       if (fcId.length > 0) filter.fcId = fcId.toString();
-      if (articleNumber) filter.articleNumber = articleNumber.replaceAll(" ", "");
-      if (type.length > 0) filter.type = type.toString();
+      if (type) filter.type = type.replaceAll(" ", "");
       if (status.length > 0) filter.status = status.toString();
+      if (pincode) filter.pincode = pincode.replaceAll(" ", "");
+      if (pupId) filter.pupId = pupId.replaceAll(" ", "");
       if (userId) filter.userId = userId.replaceAll(" ", "");
+      if (shipMode && shipMode !== "both") if (type === "channel") filter.shipMode = shipMode;
       filter.sortBy = "createdAt";
       filter.sortType = sortType;
       setPage(1);
@@ -287,31 +283,6 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                            ))}
                         </Select>
                      </FormControl>
-                     <TextField
-                        id="article-number"
-                        label="Article Number"
-                        value={articleNumber}
-                        onChange={event => setArticleNumber(event.target.value)}
-                     />
-                     <FormControl>
-                        <InputLabel id="select-type">Type</InputLabel>
-                        <Select
-                           labelId="select-type"
-                           id="select-type"
-                           multiple
-                           value={type}
-                           onChange={handleTypeChange}
-                           input={<OutlinedInput label="Type" />}
-                           renderValue={selected => selected.join(", ")}
-                        >
-                           {priceType.map(t => (
-                              <MenuItem key={t} value={t}>
-                                 <Checkbox checked={type.indexOf(t) > -1} />
-                                 <ListItemText primary={t} />
-                              </MenuItem>
-                           ))}
-                        </Select>
-                     </FormControl>
                      <FormControl>
                         <InputLabel id="select-status">Status</InputLabel>
                         <Select
@@ -331,6 +302,55 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                            ))}
                         </Select>
                      </FormControl>
+                     <FormControl>
+                        <InputLabel id="select-type">Type</InputLabel>
+                        <Select
+                           labelId="select-type"
+                           id="select-type"
+                           value={type}
+                           onChange={event => setType(event.target.value)}
+                           input={<OutlinedInput label="Type" />}
+                        >
+                           <MenuItem value="">
+                              <em>None</em>
+                           </MenuItem>
+                           {slotnxtopsType.map(t => (
+                              <MenuItem key={t} value={t}>
+                                 {t}
+                              </MenuItem>
+                           ))}
+                        </Select>
+                     </FormControl>
+                     <FormControl sx={{display: type === "channel" ? "" : "none"}}>
+                        <InputLabel id="select-type">Ship Mode</InputLabel>
+                        <Select
+                           labelId="ship-mode"
+                           id="ship-mode"
+                           value={shipMode}
+                           onChange={event => setShipMode(event.target.value)}
+                           input={<OutlinedInput label="Ship Mode" />}
+                        >
+                           <MenuItem value="both">
+                              <em>Both</em>
+                           </MenuItem>
+                           <MenuItem value="HD">HD</MenuItem>
+                           <MenuItem value="PUP">PUP</MenuItem>
+                        </Select>
+                     </FormControl>
+                     <TextField
+                        id="pincode"
+                        label="Pincode"
+                        value={pincode}
+                        onChange={event => setPincode(event.target.value)}
+                        sx={{display: type === "channel" && ["HD", "both"].includes(shipMode) ? "" : "none"}}
+                     />
+                     <TextField
+                        id="pupid"
+                        label="Pup Id"
+                        value={pupId}
+                        onChange={event => setPupId(event.target.value)}
+                        sx={{display: type === "channel" && ["PUP", "both"].includes(shipMode) ? "" : "none"}}
+                     />
                      <TextField
                         id="user-id"
                         label="User Id"
@@ -364,4 +384,4 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
    );
 }
 
-export default SPToolFilter;
+export default SlotNxtOpsFilter;
