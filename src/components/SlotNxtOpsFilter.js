@@ -200,7 +200,7 @@ function SlotNxtOpsFilter({appliedFilters, fetchData, initialFilter, setPage}) {
    const slotnxtopsType = ["bulkUpdateLeadTime", "fc", "channel"];
    const statusArr = ["created", "approved", "committed", "rejected", "originFailed", "underReview", "autoRejected"];
    const [fcId, setFcId] = useState([]);
-   const [type, setType] = useState();
+   const [type, setType] = useState("");
    const [status, setStatus] = useState([]);
    const [pincode, setPincode] = useState("");
    const [pupId, setPupId] = useState("");
@@ -220,6 +220,15 @@ function SlotNxtOpsFilter({appliedFilters, fetchData, initialFilter, setPage}) {
          target: {value},
       } = event;
       setStatus(typeof value === "string" ? value.split(",") : value);
+   };
+
+   const handleType = event => {
+      setType(event.target.value);
+      if (event.target.value !== "channel") {
+         setPincode("");
+         setPupId("");
+         setShipMode("");
+      }
    };
 
    const handleApply = () => {
@@ -284,6 +293,55 @@ function SlotNxtOpsFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                         </Select>
                      </FormControl>
                      <FormControl>
+                        <InputLabel id="select-type">Type</InputLabel>
+                        <Select
+                           labelId="select-type"
+                           id="select-type"
+                           value={type}
+                           onChange={handleType}
+                           input={<OutlinedInput label="Type" />}
+                        >
+                           <MenuItem value="">
+                              <em>None</em>
+                           </MenuItem>
+                           {slotnxtopsType.map(t => (
+                              <MenuItem key={t} value={t}>
+                                 {t}
+                              </MenuItem>
+                           ))}
+                        </Select>
+                     </FormControl>
+                     <FormControl sx={{display: type === "channel" ? "" : "none"}}>
+                        <InputLabel id="ship-mode">Ship Mode</InputLabel>
+                        <Select
+                           labelId="ship-mode"
+                           id="ship-mode"
+                           value={shipMode}
+                           onChange={event => setShipMode(event.target.value)}
+                           input={<OutlinedInput label="Ship Mode" />}
+                        >
+                           <MenuItem value="both">
+                              <em>Both</em>
+                           </MenuItem>
+                           <MenuItem value="HD">HD</MenuItem>
+                           <MenuItem value="PUP">PUP</MenuItem>
+                        </Select>
+                     </FormControl>
+                     <TextField
+                        sx={{display: type === "channel" && ["HD", "both"].includes(shipMode) ? "" : "none"}}
+                        id="pincode"
+                        label="Pincode"
+                        value={pincode}
+                        onChange={event => setPincode(event.target.value)}
+                     />
+                     <TextField
+                        sx={{display: type === "channel" && ["PUP", "both"].includes(shipMode) ? "" : "none"}}
+                        id="pupid"
+                        label="Pup Id"
+                        value={pupId}
+                        onChange={event => setPupId(event.target.value)}
+                     />
+                     <FormControl>
                         <InputLabel id="select-status">Status</InputLabel>
                         <Select
                            labelId="select-status"
@@ -302,55 +360,6 @@ function SlotNxtOpsFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                            ))}
                         </Select>
                      </FormControl>
-                     <FormControl>
-                        <InputLabel id="select-type">Type</InputLabel>
-                        <Select
-                           labelId="select-type"
-                           id="select-type"
-                           value={type}
-                           onChange={event => setType(event.target.value)}
-                           input={<OutlinedInput label="Type" />}
-                        >
-                           <MenuItem value="">
-                              <em>None</em>
-                           </MenuItem>
-                           {slotnxtopsType.map(t => (
-                              <MenuItem key={t} value={t}>
-                                 {t}
-                              </MenuItem>
-                           ))}
-                        </Select>
-                     </FormControl>
-                     <FormControl sx={{display: type === "channel" ? "" : "none"}}>
-                        <InputLabel id="select-type">Ship Mode</InputLabel>
-                        <Select
-                           labelId="ship-mode"
-                           id="ship-mode"
-                           value={shipMode}
-                           onChange={event => setShipMode(event.target.value)}
-                           input={<OutlinedInput label="Ship Mode" />}
-                        >
-                           <MenuItem value="both">
-                              <em>Both</em>
-                           </MenuItem>
-                           <MenuItem value="HD">HD</MenuItem>
-                           <MenuItem value="PUP">PUP</MenuItem>
-                        </Select>
-                     </FormControl>
-                     <TextField
-                        id="pincode"
-                        label="Pincode"
-                        value={pincode}
-                        onChange={event => setPincode(event.target.value)}
-                        sx={{display: type === "channel" && ["HD", "both"].includes(shipMode) ? "" : "none"}}
-                     />
-                     <TextField
-                        id="pupid"
-                        label="Pup Id"
-                        value={pupId}
-                        onChange={event => setPupId(event.target.value)}
-                        sx={{display: type === "channel" && ["PUP", "both"].includes(shipMode) ? "" : "none"}}
-                     />
                      <TextField
                         id="user-id"
                         label="User Id"

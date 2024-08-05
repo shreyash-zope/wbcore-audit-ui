@@ -15,6 +15,7 @@ import Zoom from "@mui/material/Zoom";
 import {Link} from "react-router-dom";
 import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
 import SlotNxtOpsFilter from "./SlotNxtOpsFilter";
+import SlotNxtSupportFilter from "./SlotNxtSupportFilter";
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
@@ -33,7 +34,7 @@ const styles = {
 
 const pageSize = [25, 50, 75, 100];
 
-function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
+function Header({onSearch, setIsLoading, setError, page, setPage, setCount, setTotalRecords}) {
    const [module, setModule] = useState("");
    const [date, setDate] = useState([dayjs().subtract(6, "days").startOf("day"), dayjs().endOf("day")]);
    const [from, setFrom] = useState(dayjs(date[0]).add(330, "m").toJSON());
@@ -61,6 +62,7 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
          }
          const result = await response.json();
          setCount(Math.trunc(result.totalRecords / size) + 1);
+         setTotalRecords(result.totalRecords);
          onSearch(result.data, filters.module);
       } catch (error) {
          setError(error.message);
@@ -140,6 +142,13 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount}) {
                />
             ) : module === "slotnxtops" ? (
                <SlotNxtOpsFilter
+                  appliedFilters={handleFilter}
+                  fetchData={fetchData}
+                  initialFilter={{module, from, to, page: 1}}
+                  setPage={setPage}
+               />
+            ) : module === "slotnxtsupport" ? (
+               <SlotNxtSupportFilter
                   appliedFilters={handleFilter}
                   fetchData={fetchData}
                   initialFilter={{module, from, to, page: 1}}

@@ -384,8 +384,8 @@ function Charts() {
                            backgroundColor: "#f5f5f5",
                            color: "white",
                            boxShadow: 3,
-                           width: 1300,
-                           height: 500,
+                           width: data.length === 1 ? 1500 : 1300,
+                           height: data.length === 1 ? 700 : 550,
                            padding: 3,
                            margin: "15px 20px",
                         }}
