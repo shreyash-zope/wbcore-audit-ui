@@ -88,10 +88,10 @@ function Logs() {
                boxShadow: 3,
                height: 40,
                width: 200,
-               display: "flex",
                paddingLeft: 3,
                alignItems: "center",
                marginLeft: 3,
+               display: module ? (data.length !== 0 ? (!isLoading ? "flex" : "none") : "none") : "none",
             }}
          >
             <div style={{fontSize: "16px", fontWeight: ""}}>
