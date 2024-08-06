@@ -61,7 +61,7 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount, setT
             throw new Error(`HTTP error! Status: ${response.status}`);
          }
          const result = await response.json();
-         setCount(Math.floor(result.totalRecords / size));
+         setCount(Math.ceil(result.totalRecords / size));
          setTotalRecords(result.totalRecords);
          onSearch(result.data, filters.module);
       } catch (error) {
