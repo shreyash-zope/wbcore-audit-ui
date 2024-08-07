@@ -1,7 +1,9 @@
 import {
+   Backdrop,
    Box,
    Button,
    Checkbox,
+   CircularProgress,
    FormControl,
    IconButton,
    InputLabel,
@@ -22,6 +24,7 @@ import {BarChart} from "@mui/x-charts";
 import Error from "./Error";
 import {Link} from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import DataNotFound from "./DataNotFound";
 
 const styles = {
    border: "1px solid #bdbdbd",
@@ -34,7 +37,6 @@ const styles = {
    justifyContent: "space-around",
 };
 
-const MaxSelection = 5;
 const statusArr = ["created", "approved", "committed", "rejected", "originFailed", "underReview", "autoRejected"];
 
 function Charts() {
@@ -212,6 +214,8 @@ function Charts() {
    const [data, setData] = useState([]);
    const [action, setAction] = useState([]);
    const [resultBy, setResultBy] = useState("date");
+   const [isLoading, setIsLoading] = useState(false);
+   const [notFound, setNotFound] = useState(false);
 
    const handleDate = newDate => {
       setDate(newDate);
@@ -248,13 +252,16 @@ function Charts() {
             result.push(formatedData);
          }
       }
-      console.log(result);
       return result;
    };
 
    const handleGenerate = async () => {
       try {
-         const filters = {from, to, resultBy, action, fcId: fcId.toString()};
+         setIsLoading(true);
+         const filters = {from, to, resultBy};
+         if (action.length > 0) filters.action = action;
+         if (fcId.length > 0) filters.fcId = fcId.toString();
+         console.log(filters);
          setError("");
          const queryString = new URLSearchParams(filters).toString();
          const response = await fetch(`http://localhost:3909/core/audits/priority?${queryString}`);
@@ -262,7 +269,13 @@ function Charts() {
             throw new Error(`HTTP error! Status: ${response.status}`);
          }
          const result = await response.json();
-         setData(formatData(result.data));
+         if (Object.keys(result.data).length) {
+            setNotFound(false);
+            setNotFound(true);
+            const data = formatData(result.data);
+            setData(data);
+         } else setData([]);
+         setIsLoading(false);
       } catch (error) {
          setError(error.message);
       }
@@ -280,10 +293,6 @@ function Charts() {
          target: {value},
       } = event;
       setAction(typeof value === "string" ? value.split(",") : value);
-   };
-
-   const isDisabled = id => {
-      return fcId.length >= MaxSelection && !fcId.includes(id);
    };
 
    return (
@@ -355,7 +364,7 @@ function Charts() {
                      renderValue={selected => selected.join(", ")}
                   >
                      {FC.map(fc => (
-                        <MenuItem key={fc.fcId} value={fc.fcId} disabled={isDisabled(fc.fcId)}>
+                        <MenuItem key={fc.fcId} value={fc.fcId}>
                            <Checkbox checked={fcId.indexOf(fc.fcId) > -1} />
                            <ListItemText primary={`${fc.fcId} - ${fc.fcName}`} />
                         </MenuItem>
@@ -370,48 +379,53 @@ function Charts() {
                </IconButton>
             </Tooltip>
          </Box>
-         {error ? (
+         {isLoading ? (
+            <Backdrop sx={{color: "#fff", zIndex: theme => theme.zIndex.drawer + 1}} open={isLoading}>
+               <div className="loading">
+                  <div style={{fontSize: "20px"}}>Searching</div>
+                  <CircularProgress color="inherit" />
+               </div>
+            </Backdrop>
+         ) : error ? (
             <Error message={error} />
-         ) : data.length > 0 ? (
-            data[0].xAxis.length !== 0 ? (
-               data.map((chart, index) => (
-                  <div style={{display: "flex", justifyContent: "center"}}>
-                     <Box
+         ) : data.length ? (
+            data.map((chart, index) => (
+               <div style={{display: "flex", justifyContent: "center"}} key={index}>
+                  <Box
+                     key={index}
+                     sx={{
+                        border: "2px solid #bdbdbd",
+                        borderRadius: 8,
+                        backgroundColor: "#f5f5f5",
+                        color: "white",
+                        boxShadow: 3,
+                        width: data.length === 1 ? 1500 : 1300,
+                        height: data.length === 1 ? 700 : 550,
+                        padding: 3,
+                        margin: "15px 20px",
+                     }}
+                  >
+                     <BarChart
                         key={index}
-                        sx={{
-                           border: "2px solid #bdbdbd",
-                           borderRadius: 8,
-                           backgroundColor: "#f5f5f5",
-                           color: "white",
-                           boxShadow: 3,
-                           width: data.length === 1 ? 1500 : 1300,
-                           height: data.length === 1 ? 700 : 550,
-                           padding: 3,
-                           margin: "15px 20px",
-                        }}
-                     >
-                        <BarChart
-                           key={index}
-                           series={[
-                              {label: "critical", data: chart.critical, highlightScope: {highlight: "item"}},
-                              {label: "non-critical", data: chart.nonCritical, highlightScope: {highlight: "item"}},
-                           ]}
-                           xAxis={[
-                              {
-                                 data: chart.xAxis,
-                                 scaleType: "band",
-                                 categoryGapRatio: 0.4,
-                                 barGapRatio: 0.05,
-                                 label: chart.label,
-                              },
-                           ]}
-                        />
-                     </Box>
-                  </div>
-               ))
-            ) : (
-               "Data not found"
-            )
+                        series={[
+                           {label: "critical", data: chart.critical, highlightScope: {highlight: "item"}},
+                           {label: "non-critical", data: chart.nonCritical, highlightScope: {highlight: "item"}},
+                        ]}
+                        xAxis={[
+                           {
+                              data: chart.xAxis,
+                              scaleType: "band",
+                              categoryGapRatio: 0.4,
+                              barGapRatio: 0.05,
+                              label: chart.label,
+                           },
+                        ]}
+                     />
+                  </Box>
+               </div>
+            ))
+         ) : notFound ? (
+            <DataNotFound />
          ) : (
             ""
          )}
