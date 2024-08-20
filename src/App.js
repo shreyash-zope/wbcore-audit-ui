@@ -9,15 +9,15 @@ import Logs from "./components/Logs";
 import Charts from "./components/Charts";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route index path="/" element={<Home />}></Route>
-        <Route path="/logs" element={<Logs />}></Route>
-        <Route path="/charts" element={<Charts />}></Route>
-      </Routes>
-    </BrowserRouter>
-  );
+   return (
+      <BrowserRouter>
+         <Routes>
+            <Route index path="/" element={<Home />}></Route>
+            <Route path="/logs" element={<Logs />}></Route>
+            <Route path="/charts" element={<Charts />}></Route>
+         </Routes>
+      </BrowserRouter>
+   );
 }
 
 export default App;

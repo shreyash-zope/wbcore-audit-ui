@@ -133,7 +133,7 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount, setT
                </Select>
             </FormControl>
 
-            {module === "spupdate" || module === "batchflip" ? (
+            {module === "spupdate" ? (
                <SPToolFilter
                   appliedFilters={handleFilter}
                   fetchData={fetchData}

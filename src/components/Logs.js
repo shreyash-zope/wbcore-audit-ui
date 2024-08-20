@@ -46,7 +46,7 @@ function Logs() {
             </Backdrop>
          ) : error ? (
             <Error message={error} />
-         ) : module === "spupdate" || module === "batchflip" ? (
+         ) : module === "spupdate" ? (
             <SPToolCard data={data} error={error} />
          ) : module === "slotnxtops" ? (
             <SlotNxtOpsCard data={data} />

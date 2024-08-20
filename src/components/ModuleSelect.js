@@ -15,7 +15,7 @@ const style = {
 };
 
 function ModuleSelect({setModule, module, setPage, setExtraFilter, fetchData}) {
-   const modules = ["slotnxtops", "slotnxtsupport", "spupdate", "batchflip"];
+   const modules = ["slotnxtops", "slotnxtsupport", "spupdate"];
 
    const [open, setOpen] = useState(true);
    const [filterApplied, setFilterApplied] = useState(false);

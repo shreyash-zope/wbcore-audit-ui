@@ -205,6 +205,7 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
    const [status, setStatus] = useState([]);
    const [userId, setUserId] = useState("");
    const [sortType, setSortType] = useState("desc");
+   const [onHold, setOnHold] = useState("false");
 
    const handleFcChange = event => {
       event.preventDefault();
@@ -236,6 +237,7 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
       if (type.length > 0) filter.type = type.toString();
       if (status.length > 0) filter.status = status.toString();
       if (userId) filter.userId = userId.replaceAll(" ", "");
+      if (type.length === 1 && ["spupdate", "inclusion", "batchflip"].includes(type[0])) filter.onHold = onHold;
       filter.sortBy = "createdAt";
       filter.sortType = sortType;
       setPage(1);
@@ -311,6 +313,26 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                               </MenuItem>
                            ))}
                         </Select>
+                     </FormControl>
+                     <FormControl
+                        sx={{
+                           display:
+                              type.length === 1 && ["spupdate", "inclusion", "batchflip"].includes(type[0])
+                                 ? ""
+                                 : "none",
+                        }}
+                     >
+                        <FormLabel id="on-hold">On Hold</FormLabel>
+                        <RadioGroup
+                           row
+                           aria-labelledby="on-hold"
+                           name="on-hold"
+                           value={onHold}
+                           onChange={event => setOnHold(event.target.value)}
+                        >
+                           <FormControlLabel value="true" control={<Radio />} label="True" />
+                           <FormControlLabel value="false" control={<Radio />} label="False" />
+                        </RadioGroup>
                      </FormControl>
                      <FormControl>
                         <InputLabel id="select-status">Status</InputLabel>
