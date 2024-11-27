@@ -89,7 +89,7 @@ function Header({onSearch, setIsLoading, setError, page, setPage, setCount, setT
    useEffect(() => {
       if (module) handleSearch(module);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [page]);
+   }, [page, size]);
 
    return (
       <div>

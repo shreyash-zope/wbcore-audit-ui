@@ -1,5 +1,5 @@
-import {Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Modal, Select, Typography} from "@mui/material";
-import {useState} from "react";
+import { Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Modal, Select, Typography } from "@mui/material";
+import { useState } from "react";
 import ViewModuleRoundedIcon from "@mui/icons-material/ViewModuleRounded";
 
 const style = {
@@ -14,8 +14,12 @@ const style = {
    p: 4,
 };
 
-function ModuleSelect({setModule, module, setPage, setExtraFilter, fetchData}) {
-   const modules = ["slotnxtops", "slotnxtsupport", "spupdate"];
+function ModuleSelect({ setModule, module, setPage, setExtraFilter, fetchData }) {
+   const modules = {
+      spupdate: 'SP Tool',
+      slotnxtops: 'SlotNxt Ops',
+      slotnxtsupport: 'SlotNxt Support'
+   }
 
    const [open, setOpen] = useState(true);
    const [filterApplied, setFilterApplied] = useState(false);
@@ -29,25 +33,25 @@ function ModuleSelect({setModule, module, setPage, setExtraFilter, fetchData}) {
       setFilterApplied(true);
       setPage(1);
       handleClose();
-      fetchData({module: event.target.value});
+      fetchData({ module: event.target.value });
    };
 
    return (
       <div className="icon-container">
          <Button onClick={handleOpen} variant="contained" startIcon={<ViewModuleRoundedIcon />}>
-            {module ? module : "* Module *"}
+            {module ? modules[module] : "* Module *"}
          </Button>
          <Modal
             open={open}
-            onClose={filterApplied ? handleClose : () => {}}
+            onClose={filterApplied ? handleClose : () => { }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
          >
             <Box sx={style}>
-               <Typography variant="button" display="block" gutterBottom sx={{textAlign: "center"}}>
+               <Typography variant="button" display="block" gutterBottom sx={{ textAlign: "center" }}>
                   Select Module
                </Typography>
-               <FormControl required sx={{m: 2, minWidth: 60, display: "flex"}}>
+               <FormControl required sx={{ m: 2, minWidth: 60, display: "flex" }}>
                   <InputLabel id="demo-simple-select-required-label">Module</InputLabel>
                   <Select
                      labelId="demo-simple-select-required-label"
@@ -56,12 +60,9 @@ function ModuleSelect({setModule, module, setPage, setExtraFilter, fetchData}) {
                      label="Module *"
                      onChange={event => handleModule(event)}
                   >
-                     <MenuItem value="">
-                        <em>None</em>
-                     </MenuItem>
-                     {modules.map((module, index) => (
+                     {Object.keys(modules).map((module, index) => (
                         <MenuItem value={module} key={index}>
-                           {module}
+                           {modules[module]}
                         </MenuItem>
                      ))}
                   </Select>
