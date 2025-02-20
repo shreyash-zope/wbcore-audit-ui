@@ -198,7 +198,7 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
       },
    ];
    const priceType = ["spupdate", "inclusion", "exclusion", "batchflip", "articleMapping"];
-   const statusArr = ["created", "approved", "committed", "rejected", "originFailed", "underReview", "autoRejected"];
+   const statusArr = ["created", "approved", "committed", "rejected", "originFailed", "underReview", "autoRejected", "queued"];
    const [fcId, setFcId] = useState([]);
    const [articleNumber, setArticleNumber] = useState("");
    const [type, setType] = useState([]);
@@ -314,7 +314,7 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                            ))}
                         </Select>
                      </FormControl>
-                     {/* <FormControl
+                     <FormControl
                         sx={{
                            display:
                               type.length === 1 && ["spupdate", "inclusion", "batchflip"].includes(type[0])
@@ -333,7 +333,7 @@ function SPToolFilter({appliedFilters, fetchData, initialFilter, setPage}) {
                            <FormControlLabel value="true" control={<Radio />} label="True" />
                            <FormControlLabel value="false" control={<Radio />} label="False" />
                         </RadioGroup>
-                     </FormControl> */}
+                     </FormControl>
                      <FormControl>
                         <InputLabel id="select-status">Status</InputLabel>
                         <Select
